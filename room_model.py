@@ -16,7 +16,7 @@ class Room(object):
     height = 3
 
     def __init__(self, room_temperature, environment_temperature, power):
-        """
+        r"""
             :param density_a: air density in kg/m^3
             :param capacity_a: the heat capacity of the air J/（kg·℃）
             :param envirtemp: environment temperature in Degrees Celsius
@@ -32,7 +32,7 @@ class Room(object):
         self.power = power
 
     def set_RoomInfo(self, wall, window, wallArea, airExchange, ventilation, area, height):
-        """
+        r"""
             :param area: the size of the room in m^2
             :param height: the height of the room in m
             :param airExchange: air exchange rate m^3/s
@@ -76,7 +76,7 @@ class Room(object):
 
     def heatUp(self, printer, method):
 
-        """
+        r"""
         :param time: how long it takes
         :param method: type of String, should be 'heater' or 'cooler' to indicate the type of heat pump
         :param printer: Boolean whether to print out the result
@@ -106,6 +106,8 @@ class Room(object):
 
         return update_t
 
+
+# example usage
 
 if __name__ == '__main__':
 
