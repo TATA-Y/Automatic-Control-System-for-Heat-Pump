@@ -1,6 +1,6 @@
 # Automatic-Control-System-for-Heat-Pump
 
-One Paragraph of project description goes here
+This system can automatic adjust the heat pump status in real time according to electricity cost and user demands. It contains two modules, the simulation for heat transfer of the room and heat pump.
 
 ## Getting Started
 
