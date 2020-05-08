@@ -248,4 +248,4 @@ if __name__ == '__main__':
     init = 0
     last_q = init
     state = 1
-    test(state, last_q, True, 'Cooler')
+    operation(state, last_q, True, 'Cooler')
