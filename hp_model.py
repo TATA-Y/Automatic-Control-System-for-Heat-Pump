@@ -189,7 +189,7 @@ class HeatPump(object):
         HeatPump.cons.set_attr(Q=self.q)
 
 
-def test(state, last_q, switch, method):
+def operation(state, last_q, switch, method):
     r"""
     :param switch: indicates whether the heat pump just start --> boolean
     :param state: the gears of the heat pump --> int
