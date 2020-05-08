@@ -22,7 +22,7 @@ pip install prettytable
 
 ### Installing
 
-If you have a working Git environment, use git to install the latest version:
+If you have a Git environment, use git to install the latest version:
 
 ```
 git clone https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump.git
