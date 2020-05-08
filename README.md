@@ -8,26 +8,24 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+If you have a working Python3 environment, use pypi to install the latest tespy version:
 
 ```
-Give examples
+pip install tespy
+```
+
+Also, you may need to install the following package using pypi
+
+```
+pip install prettytable
 ```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+If you have a working Git environment, use git to install the latest version:
 
 ```
-Give the example
-```
-
-And repeat
-
-```
-until finished
+git clone https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump.git
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
@@ -52,19 +50,9 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
-* [TESPy](https://github.com/oemof/tespy) - The web framework used
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-
+* [TESPy](https://github.com/oemof/tespy) - The Heat Pump Simulation used
 
 ## Authors
 
@@ -84,6 +72,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+Key parts of this project require the following scientific software packages: Matplotlib[Matplotlib], NumPy [@NumPy], Pandas [@Pandas]. Other packages implemented are Matplotlib and Math.
