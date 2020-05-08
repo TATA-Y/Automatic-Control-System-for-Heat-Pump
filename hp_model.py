@@ -208,21 +208,20 @@ def test(state, last_q, switch, method):
 
     total_state = 3
     current_q = state / total_state * 20000  # 20k 总功率 放热
-    Mia = True
+
     if abs(last_q - current_q) < 20:
         # if it is steady state return 1
         T = 20 * state / total_state
         steady = True
         eff = 0.95
         last_q = current_q
-        Mia = False
     else:
         steady = False
 
     if switch:
         eff = 0.7
 
-    if last_q < current_q and Mia:
+    if last_q < current_q and not steady:
         if last_q == 0:
             T = 20
         else:
@@ -231,7 +230,7 @@ def test(state, last_q, switch, method):
         if eff < 0.95:
             eff += 0.0005
 
-    elif last_q > current_q and Mia:
+    elif last_q > current_q and not steady:
         T = 15 * last_q / current_q + 20
         Q = -0.006 * (current_q - last_q) + last_q
 
