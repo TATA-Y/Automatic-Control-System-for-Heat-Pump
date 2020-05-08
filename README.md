@@ -1,5 +1,4 @@
 # Automatic-Control-System-for-Heat-Pump
-# Project Title
 
 One Paragraph of project description goes here
 
