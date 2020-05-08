@@ -244,6 +244,8 @@ def operation(state, last_q, switch, method):
     return Q, steady, P_total, COP
 
 
+# example usage
+  
 if __name__ == '__main__':
     init = 0
     last_q = init
