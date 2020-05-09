@@ -58,6 +58,9 @@ Give an example
 
 * **Tianhao Yu** 
 * **Mengzhou Wang** 
+* **Bin Dong**
+* **Yunjie Jin** 
+* **Zi‘ang Liu** 
 
 See also the list of [contributors](https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump/graphs/contributors) who participated in this project.
 
