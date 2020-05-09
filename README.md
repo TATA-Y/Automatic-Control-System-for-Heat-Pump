@@ -36,8 +36,6 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
 ### Break down into subsystem tests
 
 Test the room model and heat pump model can functional well. Run in terminal
