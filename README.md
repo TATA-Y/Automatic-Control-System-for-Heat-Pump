@@ -38,20 +38,12 @@ End with an example of getting some data out of the system or using it for a lit
 
 Explain how to run the automated tests for this system
 
-### Break down into end to end tests
+### Break down into subsystem tests
 
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
+Test the room model and heat pump model can functional well. Run in terminal
 
 ```
-Give an example
+python room_test.py
 ```
 
 ## Built With
