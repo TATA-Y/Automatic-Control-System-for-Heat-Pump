@@ -106,7 +106,24 @@ class Room(object):
 
         return update_t
 
+    
+def roomTemp(room_temp, environment_temperature, power, method_heatpump, Printer):
+    r"""
+    :param Printer: Print information or not --> boolean
+    :param room_temp: room temperature in Degrees Celsius --> float
+    :param environment_temperature: environment temperature in Degrees Celsius --> float
+    :param power: input heat pump power W --> float
+    :param method_heatpump: whether it is heater or not --> string "Heater" or "Cooler"
+    :return: the Update Temperature
+    """
 
+    room = Room(room_temp, environment_temperature, power)
+
+    temp = room.heatUp(False, method_heatpump)
+    
+    return temp
+    
+    
 # example usage
 
 if __name__ == '__main__':
