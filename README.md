@@ -66,7 +66,7 @@ Give an example
 See also the list of [contributors](https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump/graphs/contributors) who participated in this project.
 
 ## License
-Copyright (c) 2020 (Australian National University 2020 year ENGN4221 Heat Pump group)
+Copyright (c) 2020 (Australian National University Heat Pump group)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
