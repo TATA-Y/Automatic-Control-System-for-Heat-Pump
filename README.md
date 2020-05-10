@@ -41,6 +41,7 @@ End with an example of getting some data out of the system or using it for a lit
 Test the room model and heat pump model can functional well. Run in terminal
 
 ```
+cd test
 python room_test.py
 ```
 
