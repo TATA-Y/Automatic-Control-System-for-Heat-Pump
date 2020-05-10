@@ -192,11 +192,10 @@ class HeatPump(object):
 def operation(state, last_q, switch, method):
     r"""
     :param switch: indicates whether the heat pump just start --> boolean
-    :param state: the gears of the heat pump --> int
+    :param state: the gears of the heat pump --> int 0 - 3
     :param last_q: the heat output of last seconds --> float
     :param method: type of String, should be 'heater' or 'cooler' to indicate the type of heat pump
     :return: current heat output of the heat pump --> float
-             whether the heat pump is steady state --> boolean if not return False
              power usage --> float
              the efficiency of the heat pump --> float
     """
@@ -207,7 +206,7 @@ def operation(state, last_q, switch, method):
         k = -1
 
     total_state = 3
-    current_q = state / total_state * 20000  # 20k 总功率 放热
+    current_q = state / total_state * 20000  # 20k aggregate capacity
 
     if abs(last_q - current_q) < 20:
         # if it is steady state return 1
@@ -226,22 +225,25 @@ def operation(state, last_q, switch, method):
             T = 20
         else:
             T = math.ceil(40 * current_q / last_q) + 20
-        Q = 0.004 * (current_q - last_q) + last_q
+        Q_out = 0.004 * (current_q - last_q) + last_q
         if eff < 0.95:
             eff += 0.0005
 
     elif last_q > current_q and not steady:
         T = 15 * last_q / current_q + 20
-        Q = -0.006 * (current_q - last_q) + last_q
+        Q_out = -0.006 * (current_q - last_q) + last_q
 
         if eff < 0.95:
             eff += 0.0005
+    elif state == 0:
+        Q_out = 0
+        T = 0
 
-    hp = HeatPump(Q, eff, T)
+    hp = HeatPump(Q_out, eff, T)
     P, P_total, COP = hp.caculation()
-    Q *= k
+    Q_out *= k
 
-    return Q, steady, P_total, COP
+    return Q_out, P_total, COP
 
 
 # example usage
