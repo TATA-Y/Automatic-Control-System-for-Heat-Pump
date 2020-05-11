@@ -113,7 +113,7 @@ class HeatPump(object):
 
         HeatPump.nw.solve('design')
         P = [HeatPump.cp1.P.val, HeatPump.cp2.P.val, HeatPump.erp.P.val, HeatPump.pu.P.val]
-        P_total = sum(P)
+        P_total = sum(map(abs, P))
         COP = self.q / P_total
         # T = [HeatPump.su_cp1.T.val, HeatPump.cp2_c_out.T.val, HeatPump.cd_ves.T.val, HeatPump.su_ev.T.val]
         # p = [HeatPump.su_cp1.p.val, HeatPump.cp2_c_out.p.val, HeatPump.cd_ves.p.val, HeatPump.su_ev.p.val,
@@ -191,7 +191,6 @@ class HeatPump(object):
 
 def operation(state, last_q, switch, method):
     r"""
-    :param switch: indicates whether the heat pump just start --> boolean
     :param state: the gears of the heat pump --> int 0 - 3
     :param last_q: the heat output of last seconds --> float
     :param method: type of String, should be 'heater' or 'cooler' to indicate the type of heat pump
@@ -205,40 +204,43 @@ def operation(state, last_q, switch, method):
     elif method == 'Cooler':
         k = -1
 
+    last_q = abs(last_q)
     total_state = 3
     current_q = state / total_state * 20000  # 20k aggregate capacity
 
-    if abs(last_q - current_q) < 20:
+    if abs(last_q - current_q) < 50:
         # if it is steady state return 1
         T = 20 * state / total_state
         steady = True
-        eff = 0.95
         last_q = current_q
     else:
         steady = False
 
     if switch:
-        eff = 0.7
+        eff = 0.5
+    else:
+        eff = 0.87
 
     if last_q < current_q and not steady:
         if last_q == 0:
             T = 20
         else:
-            T = math.ceil(40 * current_q / last_q) + 20
+            T = math.ceil(40 * last_q / current_q) + 20
         Q_out = 0.004 * (current_q - last_q) + last_q
-        if eff < 0.95:
-            eff += 0.0005
 
     elif last_q > current_q and not steady:
-        T = 15 * last_q / current_q + 20
+        T = 60 - 40 * last_q / current_q
         Q_out = -0.006 * (current_q - last_q) + last_q
 
-        if eff < 0.95:
-            eff += 0.0005
+    if eff < 0.87:
+        eff += 0.0005
+    elif eff > 0.5 and last_q > 15000:
+        eff -= 0.0005
+
     elif state == 0:
         Q_out = 0
         T = 0
-
+    print(Q_out, eff, T)
     hp = HeatPump(Q_out, eff, T)
     P, P_total, COP = hp.caculation()
     Q_out *= k
@@ -247,9 +249,16 @@ def operation(state, last_q, switch, method):
 
 
 # example usage
-  
+
 if __name__ == '__main__':
     init = 0
-    last_q = init
     state = 1
-    operation(state, last_q, True, 'Cooler')
+    i = 0
+    while 1:
+        last_q = init
+        Q, P_total, COP = operation(state, last_q, False, 'Heater')
+        print(Q, P_total, COP)
+        i += 1
+        init = Q
+        if i == 100:
+            break
