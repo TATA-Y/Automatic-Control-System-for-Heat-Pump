@@ -192,6 +192,7 @@ class HeatPump(object):
 def operation(state, last_q, switch, method):
     r"""
     :param state: the gears of the heat pump --> int 0 - 3
+    :param switch: indicates whether the heat pump just start --> boolean
     :param last_q: the heat output of last seconds --> float
     :param method: type of String, should be 'heater' or 'cooler' to indicate the type of heat pump
     :return: current heat output of the heat pump --> float
