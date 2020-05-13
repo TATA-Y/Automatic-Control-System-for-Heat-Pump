@@ -189,15 +189,15 @@ class HeatPump(object):
         HeatPump.cons.set_attr(Q=self.q)
 
 
-def operation(state, last_q, switch, method):
+def operation(state, last_q, last_state, method):
     r"""
     :param state: the gears of the heat pump --> int 0 - 3
-    :param switch: indicates whether the heat pump just start --> boolean
+    :param last_state: previous heat pump state --> int
     :param last_q: the heat output of last seconds --> float
     :param method: type of String, should be 'heater' or 'cooler' to indicate the type of heat pump
     :return: current heat output of the heat pump --> float
              power usage --> float
-             the efficiency of the heat pump --> float
+             the efficiency of the heat pump COP --> float
     """
 
     if method == 'Heater':
@@ -217,7 +217,7 @@ def operation(state, last_q, switch, method):
     else:
         steady = False
 
-    if switch:
+    if last_state == 0:
         eff = 0.5
     else:
         eff = 0.87
@@ -263,3 +263,5 @@ if __name__ == '__main__':
         init = Q
         if i == 100:
             break
+
+
