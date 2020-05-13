@@ -106,7 +106,7 @@ class Room(object):
 
         return update_t
 
-    
+
 def roomTemp(room_temp, environment_temperature, power, method_heatpump, Printer):
     r"""
     :param Printer: Print information or not --> boolean
@@ -116,14 +116,17 @@ def roomTemp(room_temp, environment_temperature, power, method_heatpump, Printer
     :param method_heatpump: whether it is heater or not --> string "Heater" or "Cooler"
     :return: the Update Temperature
     """
-
+    
     room = Room(room_temp, environment_temperature, power)
-
+    
     temp = room.heatUp(False, method_heatpump)
     
+    if Printer:
+        room.get_RoomInfo()
+        
     return temp
-    
-    
+
+
 # example usage
 
 if __name__ == '__main__':
@@ -174,4 +177,4 @@ if __name__ == '__main__':
     plt.show()
 
     df = pd.DataFrame(data)
-    df.to_csv("/Users/YTH/Documents/ANU/Engineering/ENGN4221/Heat Pump/Room.csv", sep=",")
+    df.to_csv("Room.csv", sep=",")
