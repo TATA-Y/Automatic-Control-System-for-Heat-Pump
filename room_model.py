@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+@author: Tianhao Yu
+"""
+
 import time
 from prettytable import PrettyTable
 import matplotlib.pyplot as plt
@@ -92,7 +97,7 @@ class Room(object):
         power = -k * self.power + qLoss
         # self.roomtemp = self.roomtemp  # +273.15
         mass_air = self.density_a * Room.area
-        diff_t = power / mass_air / self.capacity_a
+        diff_t = power / mass_air / self.capacity_a  # 60 mins
 
         update_t = self.roomtemp + diff_t  # -273.15
 
@@ -116,14 +121,14 @@ def roomTemp(room_temp, environment_temperature, power, method_heatpump, Printer
     :param method_heatpump: whether it is heater or not --> string "Heater" or "Cooler"
     :return: the Update Temperature
     """
-    
+
     room = Room(room_temp, environment_temperature, power)
-    
+
     temp = room.heatUp(False, method_heatpump)
-    
+
     if Printer:
         room.get_RoomInfo()
-        
+
     return temp
 
 
@@ -133,13 +138,13 @@ if __name__ == '__main__':
 
     start = time.time()
     index = 1
-    current_t = -5
+    current_t = 15
     count = 1
     ptime = [0]
     ptemp = [current_t]
-    power = 4500
+    power = 18000
     plt.figure('Draw')
-    room = Room(current_t, -5, power)
+    room = Room(current_t, 5, power)
     room.get_RoomInfo()
     method_heatpump = 'Heater'
     data = {'Time step': [index],
@@ -148,7 +153,7 @@ if __name__ == '__main__':
             'Room temperature': [current_t],
             }
     while 1:
-        room = Room(current_t, -5, power)
+        room = Room(current_t, 5, power)
         current_t = room.heatUp(False, method_heatpump)
         count += index
         ptime.append(count)
@@ -159,22 +164,22 @@ if __name__ == '__main__':
         data['Room temperature'].append(current_t)
         data['Heatpump type'].append(method_heatpump)
 
-        if count == 3600:
-            power = 2 * power
-            print(power)
-
-        if count == 7200:
-            power = 2 * power
+        # if count == 3600:
+        #     power = 2 * power
+        #     print(power)
+        #
+        # if count == 7200:
+        #     power = 2 * power
 
         if abs(ptemp[-1] - ptemp[-2]) < 0.0001:
+            current_t = room.heatUp(True, method_heatpump)
+            break
+        elif abs(ptemp[-1] - 25) < 0.01:
             current_t = room.heatUp(True, method_heatpump)
             break
     ptime = np.array(ptime) / 60
     plt.plot(ptime, ptemp)
     plt.xlabel('Time in minute')
     plt.ylabel('Temperature in ℃')
-    plt.title(method_heatpump + '@4500 W')
+    plt.title(method_heatpump + '@18000 W')
     plt.show()
-
-    df = pd.DataFrame(data)
-    df.to_csv("Room.csv", sep=",")
