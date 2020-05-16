@@ -82,7 +82,7 @@ demand.extend([0] * 7 * 60)
 demand.extend([25] * 1 * 60)
 demand.extend([0] * 13 * 60)
 # 9pm-12pm 26c
-demand.extend([25] * 3 * 60)
+demand.extend([26] * 3 * 60)
 # next day
 demand.extend([0] * 2 * 60)
 
@@ -97,12 +97,13 @@ method_heatpump = 'Heater'
 Printer = False
 T_room = [d_temp[0]]
 Power = [0]
+heat_pumpT = [0]
 
 for t in range(1440):
     if demand[t] == 0:
         down = 1
     else:
-        dowm = 0
+        down = 0
     if demand[t - 1] < demand[t]:
         up = 1
     else:
@@ -117,31 +118,32 @@ for t in range(1440):
     state = next_state(state, up, down, reach)
     d_t = max(demand[t + 30:t + 60])
 
-    if (t + 30) < 1440 and d_price[t + 30] >= 100 and d_t > demand[t]:
+    if (t + 30) < (len(d_price) - 1) and d_price[t + 30] >= 100 and d_t > demand[t]:
         # t+3, 30min can still be t. 3--no feeling
-        if room_t > d_t + 4:  ##?
+        if room_t > d_t + 4:
             # avoid 0 for control
             control.append(0)
         elif room_t < d_t + 2:
-            control.append(100)
+            control.append(10)
         else:
-            control.append(round((d_t + 4 - room_t) * 50))
+            control.append(round(round((d_t + 4 - room_t) * 50) / 10))
 
-    elif sum(demand[t + 30:t + 90]) == 0:
-        if room_t > demand[t] - 1:  ##?
+    elif (t + 30) < (len(d_price) - 1) and sum(demand[t + 30:t + 90]) == 0:
+        if room_t > demand[t] - 1:
             # avoid 0 for control
             control.append(0)
         elif room_t < demand[t] - 3:
-            control.append(100)
+            control.append(10)
         else:
-            control.append(round((demand[t] - 1 - room_t) * 50))
+            control.append(round(round((demand[t] - 1 - room_t) * 50) / 10))
 
-    else:
+    elif (t + 30) < (len(d_price) - 1):
         if state == 0:
             control.append(0)
         elif state == 1:
-            control.append(100)
+            control.append(10)
         else:
+            print(len(d_price), t + 30, t)
             price_diff = d_price[t + 30] - d_price[t]
             # ave30-40 (4 is 10%)
             if price_diff > 4:
@@ -155,25 +157,33 @@ for t in range(1440):
                 # avoid 0 for control
                 control.append(0)
             elif room_t < set_temp - 1:
-                control.append(100)
+                control.append(10)
             else:
-                control.append(round((set_temp + 1 - room_t) * 50))
+                control.append(round(round((set_temp + 1 - room_t) * 50) / 10))
 
     # connect Heat Pump
     if control[-1] != 0:
         Q, P_total, COP, P, eff, T, current_q = operation(control[-1], Power[-1], method_heatpump)
+        print(Q, P_total, COP, P, eff, T, current_q)
     else:
         Q = 0
-    # print(control[-1], Power[-1])
-    # print(Q, P_total, COP, P, eff, T, current_q)
+        T = 0
+
     # connect Room
     room_ct = roomTemp(T_room[-1], d_temp[t], Q * 1000, method_heatpump, Printer)
-    # print(T_room[-1], d_temp[t])
-    # print(room_ct)
+    heat_pumpT.append(T)
     T_room.append(room_ct)
     Power.append(Q)
+    print(Q, T, room_ct, control[-1])
 
-
+plt.figure()
+plt.plot(T_room, label='Room T')
+plt.plot(heat_pumpT, label='Output T')
+plt.xlabel('Minutes')
+plt.ylabel('Temperature')
+plt.title('Temperature @ Room and Heat Pump output')
+plt.legend()
+plt.show()
 
 plt.figure()
 plt.plot(Power)
@@ -182,7 +192,6 @@ plt.xlabel('Minutes')
 plt.title('Power Consumption Vs Time')
 plt.legend()
 plt.show()
-
 
 plt.figure()
 plt.plot(T_room, label='Room T')
@@ -201,4 +210,3 @@ plt.xlabel('Minutes')
 plt.title('Validation of Control system')
 plt.legend()
 plt.show()
-
