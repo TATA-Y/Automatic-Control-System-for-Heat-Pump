@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+@author: Tianhao Yu & Mengzhou Wang
+"""
+
 from tespy.networks import network
 from tespy.components import (sink, source, splitter, compressor, condenser,
                               pump, heat_exchanger_simple, valve, drum,
@@ -7,6 +12,10 @@ from tespy.tools.characteristics import char_line
 from tespy.tools.characteristics import load_default_char as ldc
 
 import math
+import matplotlib.pyplot as plt
+import warnings
+
+warnings.filterwarnings('ignore')
 
 
 class HeatPump(object):
@@ -114,6 +123,8 @@ class HeatPump(object):
         HeatPump.nw.solve('design')
         P = [HeatPump.cp1.P.val, HeatPump.cp2.P.val, HeatPump.erp.P.val, HeatPump.pu.P.val]
         P_total = sum(map(abs, P))
+        P = list(map(abs, P))
+
         COP = self.q / P_total
         # T = [HeatPump.su_cp1.T.val, HeatPump.cp2_c_out.T.val, HeatPump.cd_ves.T.val, HeatPump.su_ev.T.val]
         # p = [HeatPump.su_cp1.p.val, HeatPump.cp2_c_out.p.val, HeatPump.cd_ves.p.val, HeatPump.su_ev.p.val,
@@ -189,10 +200,9 @@ class HeatPump(object):
         HeatPump.cons.set_attr(Q=self.q)
 
 
-def operation(state, last_q, last_state, method):
+def operation(state, last_q, method):
     r"""
     :param state: the gears of the heat pump --> int 0 - 3
-    :param last_state: previous heat pump state --> int
     :param last_q: the heat output of last seconds --> float
     :param method: type of String, should be 'heater' or 'cooler' to indicate the type of heat pump
     :return: current heat output of the heat pump --> float
@@ -206,62 +216,116 @@ def operation(state, last_q, last_state, method):
         k = -1
 
     last_q = abs(last_q)
-    total_state = 3
-    current_q = state / total_state * 20000  # 20k aggregate capacity
+    total_state = 100
+    current_q = state / total_state * 1080  # 18k aggregate capacity
 
     if abs(last_q - current_q) < 50:
         # if it is steady state return 1
-        T = 20 * state / total_state
+        T = 20 + 40 * state / total_state
         steady = True
-        last_q = current_q
+        Q_out = last_q
     else:
         steady = False
-
-    if last_state == 0:
-        eff = 0.5
-    else:
-        eff = 0.87
 
     if last_q < current_q and not steady:
         if last_q == 0:
             T = 20
         else:
-            T = math.ceil(40 * last_q / current_q) + 20
-        Q_out = 0.004 * (current_q - last_q) + last_q
+            T = math.ceil(40 * state / total_state * last_q / current_q) + 20
+        Q_out = 0.24 * (current_q - last_q) + last_q
 
     elif last_q > current_q and not steady:
-        T = 60 - 40 * last_q / current_q
-        Q_out = -0.006 * (current_q - last_q) + last_q
-
-    if eff < 0.87:
-        eff += 0.0005
-    elif eff > 0.5 and last_q > 15000:
-        eff -= 0.0005
+        Q_out = 0.36 * (current_q - last_q) + last_q
+        T = 20 + 40 * (Q_out / 1080)
 
     elif state == 0:
         Q_out = 0
-        T = 0
-    print(Q_out, eff, T)
+        T = 20
+
+    eff = 1.291e-05 * math.pow(T, 3) - 0.001994 * math.pow(T, 2) + 0.09788 * T - 0.662
+
     hp = HeatPump(Q_out, eff, T)
     P, P_total, COP = hp.caculation()
     Q_out *= k
 
-    return Q_out, P_total, COP
+    # bugs may appear at Q_out, T, and k
+    return Q_out, P_total, COP, P, eff, T, current_q
 
 
 # example usage
-
+"""
 if __name__ == '__main__':
     init = 0
-    state = 1
+    state = 0
     i = 0
+
+    cp1 = []
+    cp2 = []
+    erp = []
+    pu = []
+    efflist = []
+    last_state = 0
+    temperature =[]
+    state_list = []
+    Q_list = []
     while 1:
+        if i >= 30:
+            state = 0
+        state_list.append(state)
         last_q = init
-        Q, P_total, COP = operation(state, last_q, False, 'Heater')
-        print(Q, P_total, COP)
+        Q, P_total, COP, P, eff, T, current_q = operation(state, last_q, 'Heater')
+        cp1.append(P[0])
+        cp2.append(P[1])
+        erp.append(P[2])
+        pu.append(P[3])
+        efflist.append(eff)
+        temperature.append(T)
+        Q_list.append(Q)
         i += 1
         init = Q
-        if i == 100:
+        last_state = state
+        state = 100
+        if i == 50:
             break
 
 
+plt.figure()
+plt.plot(cp1, label='cp1')
+plt.plot(cp2, label='cp2')
+plt.plot(erp, label='erp')
+plt.plot(pu, label='pu')
+plt.legend()
+plt.xlabel('Minutes')
+plt.ylabel('Power')
+plt.title('Power consumption of each part change with time')
+plt.show()
+
+
+plt.figure()
+plt.plot(efflist)
+plt.xlabel('Minutes')
+plt.ylabel('Efficiency')
+plt.title('Efficiency change with time')
+plt.show()
+
+plt.figure()
+plt.plot(temperature)
+plt.xlabel('Minutes')
+plt.ylabel('Temperature')
+plt.title('Temperature change with time')
+plt.show()
+
+plt.figure()
+plt.plot(state_list)
+plt.xlabel('Minutes')
+plt.ylabel('State')
+plt.show()
+
+plt.figure()
+plt.plot(Q_list)
+plt.xlabel('Minutes')
+plt.ylabel('Q')
+plt.title('Current Q_out change with time')
+plt.show()
+
+"""
