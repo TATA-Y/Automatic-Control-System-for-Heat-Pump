@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: Zi'ang Liu & Tianhao Yu
+@author: Zi'ang Liu, Junjie Jin & Tianhao Yu
 """
 
 import numpy as np
