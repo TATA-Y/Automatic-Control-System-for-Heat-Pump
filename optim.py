@@ -79,12 +79,12 @@ def next_state(state, up, down, reach):
 demand = []
 demand.extend([0] * 7 * 60)
 # 7am-8am 25c
-demand.extend([25] * 1 * 60)
-demand.extend([0] * 13 * 60)
+demand.extend([13] * 1 * 60)
+demand.extend([18] * 10 * 60)
 # 9pm-12pm 26c
-demand.extend([26] * 3 * 60)
+demand.extend([28] * 3 * 60)
 # next day
-demand.extend([0] * 2 * 60)
+demand.extend([0] * 5 * 60)
 
 date = 100
 d_price = price(date)
@@ -98,6 +98,11 @@ Printer = False
 T_room = [d_temp[0]]
 Power = [0]
 heat_pumpT = [0]
+cost = 0
+Price = []
+newp = 0
+p_list = []
+
 
 for t in range(1440):
     if demand[t] == 0:
@@ -143,7 +148,7 @@ for t in range(1440):
         elif state == 1:
             control.append(10)
         else:
-            print(len(d_price), t + 30, t)
+            # print(len(d_price), t + 30, t)
             price_diff = d_price[t + 30] - d_price[t]
             # ave30-40 (4 is 10%)
             if price_diff > 4:
@@ -174,8 +179,56 @@ for t in range(1440):
     heat_pumpT.append(T)
     T_room.append(room_ct)
     Power.append(Q)
+    cost += Power[-1] * d_price[t] / 360000
+    Price.append(cost)
+    newp += Power[-1]
+    p_list.append(newp)
+    # print(Q, T, room_ct, control[-1])
+"""
+
+for t in range(1440):
+    room_t = T_room[-1]
+
+    if room_t < demand[t]:
+        control.append(10)
+    else:
+        control.append(0)
+    if control[-1] != 0:
+        # Q = 0
+        Q, P_total, COP, P, eff, T, current_q = operation(control[-1], Power[-1], method_heatpump)
+        # print(Q, P_total, COP, P, eff, T, current_q)
+    else:
+        Q = 0
+        T = 0
+
+    # connect Room
+    room_ct = roomTemp(T_room[-1], d_temp[t], Q * 1000, method_heatpump, Printer)
+    heat_pumpT.append(T)
+    T_room.append(room_ct)
+    Power.append(Q)
+    cost += Power[-1] * d_price[t] / 360000
+    Price.append(cost)
+    newp += Power[-1]
+    p_list.append(newp)
     # print(Q, T, room_ct, control[-1])
 
+"""
+
+plt.figure()
+plt.plot(p_list)
+plt.xlabel('Minutes')
+plt.ylabel('Power')
+plt.title('Power Consumption Vs Time @ Simple')
+plt.show()
+
+plt.figure()
+plt.plot(Price)
+plt.xlabel('Minutes')
+plt.ylabel('Cost')
+plt.title('Cost Vs Time @ Simple')
+plt.show()
+
+print(sum(Power))
 plt.figure()
 plt.plot(T_room, label='Room T')
 plt.plot(heat_pumpT, label='Output T')
@@ -189,8 +242,7 @@ plt.figure()
 plt.plot(Power)
 plt.ylabel('Power')
 plt.xlabel('Minutes')
-plt.title('Power Consumption Vs Time')
-plt.legend()
+plt.title('Power Consumption Vs Time @ Simple')
 plt.show()
 
 plt.figure()
