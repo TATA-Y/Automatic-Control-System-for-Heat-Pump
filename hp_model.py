@@ -216,7 +216,7 @@ def operation(state, last_q, method):
         k = -1
 
     last_q = abs(last_q)
-    total_state = 100
+    total_state = 10
     current_q = state / total_state * 1080  # 18k aggregate capacity
 
     if abs(last_q - current_q) < 50:
@@ -268,6 +268,7 @@ if __name__ == '__main__':
     temperature =[]
     state_list = []
     Q_list = []
+    P_list = []
     while 1:
         if i >= 30:
             state = 0
@@ -278,17 +279,18 @@ if __name__ == '__main__':
         cp2.append(P[1])
         erp.append(P[2])
         pu.append(P[3])
+        P_list.append(P_total)
         efflist.append(eff)
         temperature.append(T)
         Q_list.append(Q)
         i += 1
         init = Q
         last_state = state
-        state = 100
+        state = 1
         if i == 50:
             break
 
-
+    print(sum(P_list))
 plt.figure()
 plt.plot(cp1, label='cp1')
 plt.plot(cp2, label='cp2')
@@ -326,6 +328,14 @@ plt.plot(Q_list)
 plt.xlabel('Minutes')
 plt.ylabel('Q')
 plt.title('Current Q_out change with time')
+plt.show()
+
+
+plt.figure()
+plt.plot(P_list)
+plt.xlabel('Minutes')
+plt.ylabel('Power')
+plt.title('Power Consumption Vs Time')
 plt.show()
 
 """
