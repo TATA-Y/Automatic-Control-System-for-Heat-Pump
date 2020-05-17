@@ -12,13 +12,13 @@ import pandas as pd
 
 
 class Room(object):
-    wall = 1.048
-    window = 1.1
-    wallArea = [70, 10]
-    airExchange = 1
-    ventilation = 0.33
+    wall = 1.848
+    window = 1.8
+    wallArea = [400, 20]
+    airExchange = 2.1
+    ventilation = 0.83
     area = 100
-    height = 3
+    height = 3.4
 
     def __init__(self, room_temperature, environment_temperature, power):
         r"""
@@ -32,8 +32,8 @@ class Room(object):
         #        self.setpup_temperature = setpup_temperature
         self.roomtemp = room_temperature
         self.envirtemp = environment_temperature
-        self.density_a = 1.29
-        self.capacity_a = 10050
+        self.density_a = 1
+        self.capacity_a = 10005
         self.power = power
 
     def set_RoomInfo(self, wall, window, wallArea, airExchange, ventilation, area, height):
@@ -70,13 +70,17 @@ class Room(object):
 
     def naturalCooling(self):
         # from the walls and windows
+        if (self.roomtemp - self.envirtemp) < 0:
+            k = -1
+        else:
+            k = 1
         qWall = Room.wall * Room.wallArea[0] * abs(self.roomtemp - self.envirtemp)
         qWindow = Room.window * Room.wallArea[1] * abs(self.roomtemp - self.envirtemp)
 
         # from the air flow
         qAir = Room.area * Room.height * Room.airExchange * Room.ventilation * abs(self.roomtemp - self.envirtemp)
 
-        qLoss = qWall + qWindow + qAir
+        qLoss = (qWall + qWindow + qAir) * k
         return qLoss  # unit W
 
     def heatUp(self, printer, method):
@@ -96,7 +100,7 @@ class Room(object):
         qLoss = self.naturalCooling() * k
         power = -k * self.power + qLoss
         # self.roomtemp = self.roomtemp  # +273.15
-        mass_air = self.density_a * Room.area
+        mass_air = self.density_a * Room.area * Room.height
         diff_t = power / mass_air / self.capacity_a  # 60 mins
 
         update_t = self.roomtemp + diff_t  # -273.15
