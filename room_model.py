@@ -12,13 +12,13 @@ import pandas as pd
 
 
 class Room(object):
-    wall = 1.848
-    window = 1.8
-    wallArea = [400, 20]
-    airExchange = 2.1
-    ventilation = 0.83
+    wall = 5.348
+    window = 4.7
+    wallArea = [350, 80]
+    airExchange = 2.8
+    ventilation = 1.63
     area = 100
-    height = 3.4
+    height = 3
 
     def __init__(self, room_temperature, environment_temperature, power):
         r"""
@@ -33,7 +33,7 @@ class Room(object):
         self.roomtemp = room_temperature
         self.envirtemp = environment_temperature
         self.density_a = 1
-        self.capacity_a = 10005
+        self.capacity_a = 8005
         self.power = power
 
     def set_RoomInfo(self, wall, window, wallArea, airExchange, ventilation, area, height):
