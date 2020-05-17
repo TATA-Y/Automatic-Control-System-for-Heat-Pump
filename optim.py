@@ -103,7 +103,7 @@ Price = []
 newp = 0
 p_list = []
 
-
+"""
 for t in range(1440):
     if demand[t] == 0:
         down = 1
@@ -123,21 +123,21 @@ for t in range(1440):
     state = next_state(state, up, down, reach)
     d_t = max(demand[t + 30:t + 60])
 
-    if (t + 30) < (len(d_price) - 1) and d_price[t + 30] >= 100 and d_t > demand[t]:
+    if (t + 30) < (len(d_price) - 1) and d_price[t + 30] >= 80 and d_t > demand[t]:
         # t+3, 30min can still be t. 3--no feeling
-        if room_t > d_t + 4:
+        if room_t > d_t + 3:
             # avoid 0 for control
             control.append(0)
-        elif room_t < d_t + 2:
+        elif room_t < d_t + 1:
             control.append(10)
         else:
             control.append(round(round((d_t + 4 - room_t) * 50) / 10))
 
-    elif (t + 30) < (len(d_price) - 1) and sum(demand[t + 30:t + 90]) == 0:
-        if room_t > demand[t] - 1:
+    elif demand[t + 120] <= demand[t]:
+        if room_t > demand[t] - 2:
             # avoid 0 for control
             control.append(0)
-        elif room_t < demand[t] - 3:
+        elif room_t < demand[t] - 4:
             control.append(10)
         else:
             control.append(round(round((demand[t] - 1 - room_t) * 50) / 10))
@@ -146,17 +146,17 @@ for t in range(1440):
         if state == 0:
             control.append(0)
         elif state == 1:
-            control.append(10)
+            control.append(8)
         else:
             # print(len(d_price), t + 30, t)
             price_diff = d_price[t + 30] - d_price[t]
             # ave30-40 (4 is 10%)
             if price_diff > 4:
-                set_temp = demand[t] + 2
+                set_temp = demand[t] + 1.5
             elif price_diff < -4:
-                set_temp = demand[t] - 2
+                set_temp = demand[t] - 2.5
             else:
-                set_temp = demand[t] + price_diff / 2
+                set_temp = demand[t] + price_diff / 2 - 0.5
 
             if room_t > set_temp + 1:
                 # avoid 0 for control
@@ -168,6 +168,7 @@ for t in range(1440):
 
     # connect Heat Pump
     if control[-1] != 0:
+        # Q = 0
         Q, P_total, COP, P, eff, T, current_q = operation(control[-1], Power[-1], method_heatpump)
         # print(Q, P_total, COP, P, eff, T, current_q)
     else:
@@ -189,9 +190,9 @@ for t in range(1440):
 for t in range(1440):
     room_t = T_room[-1]
 
-    if room_t < demand[t]:
+    if room_t < demand[t] - 1:
         control.append(10)
-    else:
+    if room_t > demand[t] + 1:
         control.append(0)
     if control[-1] != 0:
         # Q = 0
@@ -212,7 +213,7 @@ for t in range(1440):
     p_list.append(newp)
     # print(Q, T, room_ct, control[-1])
 
-"""
+
 
 plt.figure()
 plt.plot(p_list)
