@@ -164,7 +164,7 @@ for t in range(1440):
     # connect Heat Pump
     if control[-1] != 0:
         Q, P_total, COP, P, eff, T, current_q = operation(control[-1], Power[-1], method_heatpump)
-        print(Q, P_total, COP, P, eff, T, current_q)
+        # print(Q, P_total, COP, P, eff, T, current_q)
     else:
         Q = 0
         T = 0
@@ -174,7 +174,7 @@ for t in range(1440):
     heat_pumpT.append(T)
     T_room.append(room_ct)
     Power.append(Q)
-    print(Q, T, room_ct, control[-1])
+    # print(Q, T, room_ct, control[-1])
 
 plt.figure()
 plt.plot(T_room, label='Room T')
