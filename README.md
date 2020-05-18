@@ -39,6 +39,7 @@ Test the room model and heat pump model can functional well. Run in terminal
 ```
 cd test
 python room_test.py
+python hp_test.py
 ```
 
 ## Built With
