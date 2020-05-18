@@ -57,6 +57,15 @@ python hp_test.py
 
 See also the list of [contributors](https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump/graphs/contributors) who participated in this project.
 
+## Some issues to know
+
+1. The test environment is
+    - Python 3.7.0
+    - TESpy 0.2.2
+
+2. If you want to speed up the running speed of the program, you need to delete the print items and error items in TESpy.
+
+
 ## License
 Copyright (c) 2020 (Australian National University Heat Pump group)
 
