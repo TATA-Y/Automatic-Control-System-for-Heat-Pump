@@ -30,13 +30,12 @@ git clone https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump.gi
 
 End with an example of getting some data out of the system or using it for a little demo
 ### Usage
+```
+from optim import controloptimal
 
-For using the package, you should follow these steps:
-1. Dowload the this package from Github
-2. On the this folder, build a main.py to run the package
-3. On the main.py, import controloptimal function from optim.py 
-4. call the controloptimal function by input requirement input
-Note: the detail could be found from User Guide Document
+Costlist, p_list, T_room, cost, newP = controloptimal(time, date, Method, demand, Price_file, weather_file)
+```
+Note: the detail could be found from [User Guide Document](https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump/blob/master/User-Guide.pdf)
 ## Running the tests
 
 ### Break down into subsystem tests
@@ -46,7 +45,7 @@ Test the room model and heat pump model can functional well. Run in terminal
 ```
 cd test
 python room_test.py
-python hp_test.py
+python hp_test.
 ```
 
 ## Built With
