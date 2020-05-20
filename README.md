@@ -83,6 +83,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Acknowledgments
 
-Key parts of this project require the following scientific software packages: Matplotlib[Matplotlib], NumPy [@NumPy], Pandas [@Pandas]. Other packages implemented are Matplotlib and Math.
+Key parts of this project require the following scientific software packages: Matplotlib[@Matplotlib], NumPy [@NumPy], Pandas [@Pandas]. Other packages implemented are prettytable, TESpy, and Math.
 
 
