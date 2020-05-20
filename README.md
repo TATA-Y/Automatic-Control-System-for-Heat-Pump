@@ -29,7 +29,14 @@ git clone https://github.com/Tianhao-Y/Automatic-Control-System-for-Heat-Pump.gi
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
+### Usage
 
+For using the package, you should follow these steps:
+1. Dowload the this package from Github
+2. On the this folder, build a main.py to run the package
+3. On the main.py, import controloptimal function from optim.py 
+4. call the controloptimal function by input requirement input
+Note: the detail could be found from User Guide Document
 ## Running the tests
 
 ### Break down into subsystem tests
