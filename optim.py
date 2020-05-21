@@ -84,7 +84,7 @@ def next_state(state, up, down, reach):
 
 
 def controloptimal(time, date, method_heatpump, demand, price_list, temp_list):
-r"""
+    r"""
     :param time: total minute which need to analsying--> int should be delete 120
     :param date: choose the data to analysing --> int
     :param method_heatpump: type of String, should be 'heater' or 'cooler' to indicate the type of heat pump
@@ -195,7 +195,7 @@ r"""
         costlist.append(cost)
         newp += Power[-1]
         p_list.append(newp)
-    return costlist,p_list,T_room,cost,newP
+    return costlist,p_list,T_room,cost,newp
 
 
 
